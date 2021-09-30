@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 @Module({
   imports: [
     JogadoresModule,
-    MongooseModule.forRoot('mongodb+srv://admin:nGRoUQkQLm2zr2N3@cluster0.fqkjv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    MongooseModule.forRoot('mongourl',
       {
         useNewUrlParser: true,
         useUnifiedTopology: true
