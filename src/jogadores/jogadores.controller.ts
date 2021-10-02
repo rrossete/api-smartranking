@@ -1,6 +1,8 @@
+import { UpdateJogadorDto } from './dtos/update-jogador.dtos ';
+import { JogadoresValidationParametersPipe } from './pipes/jogadores-validation-parameters.pipe';
 import { Jogador } from './interfaces/jogador.interface';
 import { JogadoresService } from './jogadores.service';
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateJogadorDto } from './dtos/create-jogador.dtos';
 
 @Controller('/api/v1/jogadores')
@@ -9,19 +11,30 @@ export class JogadoresController {
     constructor(private readonly jogadoresService: JogadoresService){}
 
     @Post()
-    async createUpdateJogador(@Body() jogadorDto: CreateJogadorDto) {
+    @UsePipes(ValidationPipe)
+    async createJogador(@Body() jogadorDto: CreateJogadorDto) : Promise<Jogador> {
+        return await this.jogadoresService.createJogador(jogadorDto)
+    }
 
-        await this.jogadoresService.createUpdateJogador(jogadorDto)
+    @Put("/:id")
+    async updateJogador(@Param("id") id: string, @Body() jogadorDto: UpdateJogadorDto): Promise<void>{
+         await this.jogadoresService.updateJogador(jogadorDto, id)
     }
 
     @Get() 
-    async getJogadores(@Query('email') email: string): Promise<Jogador[] | Jogador>{
-       return await this.jogadoresService.getJogadores(email);
+    async getJogadores(): Promise<Jogador[]>{
+       return await this.jogadoresService.getJogadores();
     }
 
-    @Delete('/:email')
-    async deleteJogadorByEmail(@Param('email') email: string){
+    @Get("/:id") 
+    async getJogadoresByEmail(@Param('id') id: string): Promise< Jogador>{
+        
+       return await this.jogadoresService.getJogadoresById(id);
+    }
 
-       await this.jogadoresService.deleteJogadorByEmail(email);
+    @Delete("/:id")
+    async deleteJogadorByEmail(@Param('id') id: string) : Promise<void>{
+
+       await this.jogadoresService.deleteJogadorByEmail(id);
     }
 }
